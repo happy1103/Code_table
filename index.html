@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+<meta charset="UTF-8">
+<title>機密代碼</title>
+<style>
+  table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 7px;
+  }
+  th, td {
+    padding: 20px;
+    text-align: center;
+	height: 20px;
+	width: 35px;
+  }
+  .color-lump {
+    width: 80px;
+    height: 40px;
+  }
+  button {
+    width: 80px;
+    height: 40px;
+  }
+</style>
+</head>
+<body><center>
+<div id="table-container"></div>
+<br>
+<div class="color-lump" id="lead"></div>
+<br>
+<div><button id="start" onclick="functionToExecute()">抽</button></div>
+<script>
+function getRandomNumbers() {
+    // 生成1到25的數字陣列
+    let numbers = Array.from({ length: 25 }, (_, i) => i + 1);
+
+    // 隨機選擇指定數量的號碼
+    function selectRandomNumbers(count) {
+        let selectedNumbers = [];
+        for (let i = 0; i < count; i++) {
+            let randomIndex = Math.floor(Math.random() * numbers.length);
+            selectedNumbers.push(numbers[randomIndex]);
+            numbers.splice(randomIndex, 1); // 移除已選擇的號碼
+        }
+        return selectedNumbers;
+    }
+
+    // 選出9個號碼
+    let firstSelection = selectRandomNumbers(9);
+    // 選出8個號碼
+    let secondSelection = selectRandomNumbers(8);
+    // 選出1個號碼
+    let thirdSelection = selectRandomNumbers(1);
+
+    return {
+        firstSelection: firstSelection,
+        secondSelection: secondSelection,
+        thirdSelection: thirdSelection
+    };
+}
+
+function markCells(array_nambers, bg_color) {
+    for (let i = 0; i < array_nambers.length; i++) {
+        let cellId = array_nambers[i];
+        let cell = document.getElementById(cellId);
+		console.log(cellId)
+		back_color = "background-color: " + bg_color + ";"
+        if (cell) {
+            cell.setAttribute("style", back_color);
+        }
+    }
+}
+
+function createTable() {
+    var container = document.getElementById('table-container');
+    var table = document.createElement('table');
+    var idCounter = 1;
+
+    for (var i = 0; i < 5; i++) {
+        var tr = document.createElement('tr');
+        for (var j = 0; j < 5; j++) {
+            var td = document.createElement('td');
+            td.id = idCounter;  // 設定每個單元格的 ID
+            // td.textContent = idCounter;  // 顯示 ID 編號
+            tr.appendChild(td);
+            idCounter++;
+        }
+        table.appendChild(tr);
+    }
+
+    container.appendChild(table);
+}
+
+createTable();
+
+function restart() {
+	for (let i = 0; i < 25; i++) {
+        let cellId = i;
+        let cell = document.getElementById(cellId);
+        if (cell) {
+            cell.setAttribute("style", "background-color: white;");
+        }
+    }
+}
+
+function functionToExecute() {
+	let x = Math.floor((Math.random() * 10) + 1);
+	var laed = document.getElementById('lead');
+	var set_bg_color = ["#FF5151", "#2894FF", "#8E8E8E"]
+	
+	restart();
+	
+	let result = getRandomNumbers();
+	lead_play = result.firstSelection;
+	second_play = result.secondSelection;
+	dead_cell = result.thirdSelection;
+	
+	if (x%2 == 0){
+		// red = 9;
+		lead.setAttribute("style", "background-color: #FF5151;");
+		console.log(x);
+	}
+	else{
+		// blue = 9;
+		lead.setAttribute("style", "background-color: #2894FF;");
+		console.log(x);
+		set_bg_color = ["#2894FF", "#FF5151", "#8E8E8E"]
+	}
+	markCells(lead_play, set_bg_color[0]);
+	markCells(second_play, set_bg_color[1]);
+	markCells(dead_cell, set_bg_color[2]);
+}
+
+</script>
+</center>
+</body>
+</html>
